@@ -28,7 +28,6 @@ public class SwiftyJot {
         public var showPaletteButton = true
 		public var senderName: String = ""
 		public var hideBackButton = false
-		public var navigationItems: [UIBarButtonItem]?
     }
 
     public var config = Config()
@@ -66,4 +65,5 @@ public class SwiftyJot {
 
 public protocol SwiftyJotDelegate: class {
 	func didSaveImage(sender: String, image: UIImage)
+	func didDeleteImage(sender: String)
 }

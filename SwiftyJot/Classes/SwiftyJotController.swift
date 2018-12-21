@@ -209,6 +209,25 @@ class SwiftyJotController: UIViewController {
 		delegate?.didSaveImage(sender: self.config.senderName, image: sourceImageView.image!)
     }
 
+	@objc func deleteImage() {
+		let alert = UIAlertController.init(title: "Supprimer l'image",
+										   message: "Voulez-vous vraiment supprimer l'image ?",
+										   preferredStyle: .alert)
+		let cancelAction = UIAlertAction.init(title: "Annuler", style: .cancel, handler: nil)
+		let deleteAction = UIAlertAction.init(title: "Supprimer", style: .destructive) { (_) in
+			if self.navigationController != nil {
+				self.navigationController!.popViewController(animated: true)
+			} else {
+				self.dismiss(animated: true, completion: nil)
+			}
+
+			self.delegate?.didDeleteImage(sender: self.config.senderName)
+		}
+		alert.addAction(cancelAction)
+		alert.addAction(deleteAction)
+		self.present(alert, animated: true)
+	}
+
     @objc func toggleMenu() {
         UIView.setAnimationCurve(.easeOut)
         if isMenuOpen {
@@ -504,13 +523,11 @@ class SwiftyJotController: UIViewController {
 
         setupMenu()
 
-        let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(save))
-        navigationItem.rightBarButtonItem = saveButton
-		if let navItems = config.navigationItems {
-			var items = navItems
-			items.insert(saveButton, at: 0)
-			navigationItem.rightBarButtonItems = items
-		}
+		let bundle = Bundle(for: SwiftyJot.self)
+		let saveButton = UIBarButtonItem(image: UIImage(named: "save", in: bundle, compatibleWith: nil), style: .done, target: self, action: #selector(save))
+		let deleteButton = UIBarButtonItem.init(image: UIImage(named: "trash", in: bundle, compatibleWith: nil), style: .done, target: self, action: #selector(deleteImage))
+		let undoButton = UIBarButtonItem.init(image: UIImage(named: "undo", in: bundle, compatibleWith: nil), style: .done, target: self, action: #selector(undo))
+        navigationItem.rightBarButtonItems = [saveButton, deleteButton, undoButton]
 
 		if config.hideBackButton {
 			navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Annuler", style: .done, target: self, action: #selector(clear))
