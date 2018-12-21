@@ -506,6 +506,11 @@ class SwiftyJotController: UIViewController {
 
         let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(save))
         navigationItem.rightBarButtonItem = saveButton
+		if let navItems = config.navigationItems {
+			var items = navItems
+			items.insert(saveButton, at: 0)
+			navigationItem.rightBarButtonItems = items
+		}
 
 		if config.hideBackButton {
 			navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Annuler", style: .done, target: self, action: #selector(clear))
